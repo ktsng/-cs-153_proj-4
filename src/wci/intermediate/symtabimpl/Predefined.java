@@ -2,6 +2,8 @@ package wci.intermediate.symtabimpl;
 
 import java.util.ArrayList;
 
+//import com.sun.java.util.jar.pack.Package.Class.Field;
+
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.*;
 
@@ -26,7 +28,8 @@ public class Predefined
     public static TypeSpec booleanType;
     public static TypeSpec charType;
     public static TypeSpec undefinedType;
-
+    public static TypeSpec complexType;
+    
     // Predefined identifiers.
     public static SymTabEntry integerId;
     public static SymTabEntry realId;
@@ -34,7 +37,10 @@ public class Predefined
     public static SymTabEntry charId;
     public static SymTabEntry falseId;
     public static SymTabEntry trueId;
-
+    public static SymTabEntry complexId;
+    public static SymTabEntry re;
+    public static SymTabEntry im;
+    
     /**
      * Initialize a symbol table stack with predefined identifiers.
      * @param symTab the symbol table stack to initialize.
@@ -79,6 +85,22 @@ public class Predefined
         charId.setDefinition(DefinitionImpl.TYPE);
         charId.setTypeSpec(charType);
 
+        // Type complex
+        complexId = symTabStack.enterLocal("complex");
+        complexType = TypeFactory.createType(RECORD);
+        complexType.setIdentifier(complexId);
+        complexId.setDefinition(DefinitionImpl.TYPE);
+        complexId.setTypeSpec(complexType);
+        //complexId.setAttribute(DefinitionImpl.FIELD, re);
+        complexType.setAttribute(RECORD_SYMTAB, symTabStack.push());
+        re = symTabStack.enterLocal("re");
+        im = symTabStack.enterLocal("im");
+        re.setDefinition(DefinitionImpl.FIELD);
+        im.setDefinition(DefinitionImpl.FIELD);
+        re.setTypeSpec(realType);
+        im.setTypeSpec(realType);
+       
+        
         // Undefined type.
         undefinedType = TypeFactory.createType(SCALAR);
     }
@@ -106,5 +128,6 @@ public class Predefined
         constants.add(falseId);
         constants.add(trueId);
         booleanType.setAttribute(ENUMERATION_CONSTANTS, constants);
+        
     }
 }
